@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- 
+	name和describe属性都可以写成子标签形式 
+	parallelRun:决定target是并行还是串行
+	traceOn:是否跟踪执行信息
+ -->
+<task describe="配置模板" name="test" parallelRun="false" traceOn="true">
+	<systemProperties>
+		<property name="name" value="test"/>
+	</systemProperties>
+	
+	<extendProperties>
+		<property name="taskname" value="task的属性值"/>
+	</extendProperties>
+	
+	<listeners>
+		<listener listenerClass="com.cangoonline.batch.task.TaskEventListener" enabled="true">
+			<property name="name" value="listener使用的属性注入"/>
+		</listener>
+	</listeners>
+	
+	<targets>
+	
+		<!-- 
+			parallelRun:决定executeUnit是并行还是串行，当为true时，路由表必须为parallelTable且不能有routeTable;为false实同理
+			parallelNumber:当parallelRun为true时有效, 并发的最大数量（或者说是线程池大小）
+			traceOn:是否跟踪执行信息, 如果没有配置继承Task的traceOn属性值
+		 -->
+		<target describe="配置模板" name="test" parallelRun="true" parallelNumber="10" enabled="true" traceOn="true" >
+			<extendProperties>
+				<property name="name" value="target级别使用的属性注入"/>
+			</extendProperties>
+			<executeUnits>
+			
+				<!-- allowManualExecute：是否允许执行单元单独执行 -->
+				<!-- 1.属性形式配置 -->
+				<executeUnit name="executeUnitName1" executeClass="com.cangoonline.batch.task.ExecuteUnit" describe="第一个执行单元" allowManualExecute="true">
+					<property name="name" value="executeUnit级别使用的属性注入" />
+				</executeUnit>
+				<!-- 2.标签形式配置 -->
+				<executeUnit allowManualExecute="true" >
+					<executeClass>com.cangoonline.batch.task.ExecuteUnit</executeClass>
+					<name>executeUnitName2</name>
+					<describe>第二个执行单元</describe>
+				</executeUnit>
+			</executeUnits>
+		</target>
+		
+		<!-- 串 行:parallelRun=false, 与并行路由表不能同时存在-->
+		<routeTable>
+			<route unit="executeUnitName1" nextUnit="executeUnitName1" executeStatus="unexecute"></route>
+			<route unit="executeUnitName1" nextUnit="executeUnitName2" executeStatus="successful"></route>
+			<route unit="executeUnitName2" nextUnit="executeUnitName3" executeStatus="successful"></route>
+		</routeTable>
+		
+		<!-- 并行 parallelRun=true, 与串行路由表不能同时存在-->
+		<parallelTable>
+			<unit name="executeUnitName1"></unit>
+			<unit name="executeUnitName2"></unit>
+			<unit name="executeUnitName3">
+				<preUnit unit="executeUnitName1" executeStatus="successful"></preUnit>
+				<preUnit unit="executeUnitName2" executeStatus="successful"></preUnit>
+			</unit>
+			
+			<unit name="executeUnitName10">
+				<preUnit unit="executeUnitName3" executeStatus="successful"></preUnit>
+			</unit>
+			<unit name="executeUnitName11">
+				<preUnit unit="executeUnitName3" executeStatus="successful"></preUnit>
+			</unit>
+			<unit name="executeUnitName12">
+				<preUnit unit="executeUnitName3" executeStatus="successful"></preUnit>
+			</unit>
+			<unit name="executeUnitName13">
+				<preUnit unit="executeUnitName3" executeStatus="successful"></preUnit>
+			</unit>
+			<unit name="executeUnitName14">
+				<preUnit unit="executeUnitName3" executeStatus="successful"></preUnit>
+			</unit>
+			<unit name="executeUnitName15">
+				<preUnit unit="executeUnitName3" executeStatus="successful"></preUnit>
+			</unit>
+			<unit name="executeUnitName16">
+				<preUnit unit="executeUnitName3" executeStatus="successful"></preUnit>
+			</unit>
+			<unit name="executeUnitName17">
+				<preUnit unit="executeUnitName3" executeStatus="successful"></preUnit>
+			</unit>
+			<unit name="executeUnitName18">
+				<preUnit unit="executeUnitName3" executeStatus="successful"></preUnit>
+			</unit>
+			<unit name="executeUnitName19">
+				<preUnit unit="executeUnitName3" executeStatus="successful"></preUnit>
+			</unit>
+			
+		</parallelTable>
+	
+	</targets>
+	
+
+</task>

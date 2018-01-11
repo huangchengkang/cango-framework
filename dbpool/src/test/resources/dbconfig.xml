@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseConfig>
+	<defaultDataSource>local</defaultDataSource>
+
+	 <resources>
+	 
+		<resource name="local" available="false" type="jdbc"  >
+			<driver>com.mysql.jdbc.Driver</driver>
+     	 	<url>jdbc:mysql://192.168.50.95:3306/mysql</url>
+			<user>root</user>
+			<password>root</password>
+			<maxActive>200</maxActive>
+			<maxWait>10000</maxWait>
+			<maxIdle>100</maxIdle>
+		</resource>
+		
+		<resource name="mysql" available="true" type="jdbc"  >
+			<driver>com.mysql.jdbc.Driver</driver>
+     	 	<url>jdbc:mysql://localhost:3306/mysql</url>
+			<user>root</user>
+			<password>root</password>
+			<maxActive>100</maxActive>
+			<maxWait>10000</maxWait>
+			<maxIdle>70</maxIdle>
+		</resource>
+
+	</resources>
+
+</databaseConfig>
